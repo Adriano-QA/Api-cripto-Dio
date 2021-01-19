@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Api Coin</title>
+</head>
+<body>
+    <script type="text/javascript">
+        var apikey = {
+            key : 'de775bfb-164f-40b3-81ee-6bb344acc6fb'
+        }
+
+        fetch('https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=' + apikey.key)
+        .then((response) => {
+            if(!response.ok) throw new Error('Erro ao executar a requisição' + response.status);
+            return response.json();
+        })
+
+        .then((api) => {
+            var text = '';
+            var regex = new RegExp(/\d+-\d+-\d+/g);
+                  
+
+            for(let i = 0; i < 10; i++){
+                var dataApi = api.data[i].first_historical_data.match(regex)[0];
+                var data = new Date(dataApi).toLocaleDateString();
+
+                text = text +
+            `   <div class='media'>
+                    <img src='https://cointimes.com.br/wp-content/uploads/2019/09/Logo-Cointimes_Si%CC%81mbolo.png' class='align-self-center mr-3' alt='coin' width='90' height='90'>
+                    <div class='media-body'>
+                    <h5 class='mt-2'>${api.data[i].name}</h5>
+                    <p>${api.data[i].symbol}</p>
+                    <p>${data}</p>
+                    </div>
+                </div>      
+            `;
+                document.getElementById('coins').innerHTML = text;
+            }
+        })
+
+        .catch((error) => {
+            console.log(error.message);
+        })
+
+
+    </script>
+
+    <div id='coins'></div>
+</body>
+</html>
